@@ -10,7 +10,7 @@ class PomodoroTimer:
         self.master = master
         self.master.title("make_me_productive.exe")
 
-        self.workTime = 1 * 5  # work time
+        self.workTime = 20 * 60  # work time
         self.breakTime = 5 * 60  # break time
         self.isBreak = False
         self.isRunning = False
