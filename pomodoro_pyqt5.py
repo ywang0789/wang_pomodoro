@@ -18,7 +18,7 @@ class PomodoroTimer(QWidget):
         super().__init__()
 
         self.setWindowTitle("make_me_productive.exe")
-        self.workTime = 20 * 5  # work time
+        self.workTime = 20 * 60  # work time
         self.breakTime = 5 * 60  # break time
         self.isBreak = False
         self.isRunning = False
@@ -46,6 +46,41 @@ class PomodoroTimer(QWidget):
         layout.addWidget(self.quit_button)
 
         self.setLayout(layout)
+
+        # Create a QTimer
+        self.timer = QTimer(self)
+        self.timer.timeout.connect(self.startTimer)
+
+    def formatTime(self, seconds):
+        mins, secs = divmod(seconds, 60)
+        return f"{mins:02}:{secs:02}"
+
+    def updateLabel(self):
+        self.label.setText(self.formatTime(self.timeRemaining))
+
+    def start(self):
+        if not self.isRunning:
+            self.isRunning = True
+            self.timer.start(1000)
+
+    def stop(self):
+        self.isRunning = False
+        self.timer.stop()
+
+    def startTimer(self):
+        if self.isRunning and self.timeRemaining > 0:
+            self.timeRemaining -= 1
+            self.updateLabel()
+        elif self.isRunning and self.timeRemaining == 0:
+            if self.isBreak:
+                self.isBreak = False
+                self.timeRemaining = self.workTime
+                QMessageBox.information(self, "Info", "GET YO ASS BACK TO WORK!!!")
+            else:
+                self.isBreak = True
+                self.timeRemaining = self.breakTime
+                QMessageBox.information(self, "Info", "Time to BING CHILLIN🍦")
+            self.updateLabel()
 
 
 if __name__ == "__main__":
